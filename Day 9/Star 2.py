@@ -1,9 +1,8 @@
 # Day 9
-import string
-# korkeus 6000
-# leveys 6000
+
 def main():
     
+    # Check for maximum size of the grid, results below
     file = open("Data.txt", "r")
     lines = file.readlines()
     dimensions = [0,0,0,0]
@@ -18,8 +17,12 @@ def main():
             dimensions[2] = dimensions[2] + int(sections[1])
         elif sections[0] == "R":
             dimensions[3] = dimensions[3] + int(sections[1])
-
     
+    print(dimensions)
+    # required width approx 6000
+    # required height approx 6000
+    
+    # Setting up the map
     mapp = []
     for i in range(0,6000):
         mappp = []
@@ -27,12 +30,12 @@ def main():
             mappp.append(".")
         mapp.append(mappp)
     #      X     Y
-    S = [3000, 3000]
-    H = [3000, 3000]
-    T = [3000, 3000]
-    K = [[3000, 3000],[3000, 3000],[3000, 3000],[3000, 3000],[3000, 3000],[3000, 3000],[3000, 3000],[3000, 3000],[3000, 3000],[3000, 3000]]
+    S = [3000, 3000] # Starting point
+    # Knots, Head: i = 0, Tail: i = 9
+    K = [[3000, 3000],[3000, 3000],[3000, 3000],[3000, 3000],[3000, 3000],[3000, 3000],[3000, 3000],[3000, 3000],[3000, 3000],[3000, 3000]] 
     mapp[S[0]][S[0]] = "#"
-    print(K[2][0])
+    
+    
     for line in lines:
         line = line.replace("\n","")
         sections = line.split(" ")
@@ -47,12 +50,10 @@ def main():
             b = K[9][1]
             if mapp[a][b] == ".":
                 mapp[a][b] = "#"
-            #print("Head: ", H)
-            #print("Tail: ", T)
     result = countmarks(mapp)
     print("#-marks: ", result)
-    print("Kiitos ohjelman käytöstä!")
 
+# Moves head by one tick using head's current coordinates and direction.
 def newPosHead(head, direction):
     if direction == "U":
         head[1] = head[1] + 1
@@ -64,6 +65,7 @@ def newPosHead(head, direction):
         head[0] = head[0] -1
     return head
 
+# Finds a new position for any tail knot by comparing the knot's position to the next knot's (head) position.
 def newPosTail(head, tail):
     if tail[0] == head[0]:
         if abs(tail[1] - head[1]) > 1:
@@ -100,6 +102,7 @@ def newPosTail(head, tail):
                 tail = newPosHead(tail, "L")
     return tail
 
+# Counts the number of #-marks on the map. These are the points that the end tail has visited at least once.
 def countmarks(mapp):
     count = 0
     for i in range(0,6000):
